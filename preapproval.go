@@ -4,8 +4,8 @@ type PreapprovalNotification struct {
 	MerchantID     string `json:"merchant_id" schema:"merchant_id"`
 	OrderID        string `json:"order_id" schema:"order_id"`
 	PaymentID      string `json:"payment_id" schema:"payment_id"`
-	Amount         string `json:"amount" schema:"amount"`
-	Currency       string `json:"currency" schema:"currency"`
+	Amount         string `json:"amount" schema:"payhere_amount"`
+	Currency       string `json:"currency" schema:"payhere_currency"`
 	StatusCode     int    `json:"status_code" schema:"status_code"`
 	Md5sig         string `json:"md5sig" schema:"md5sig"`
 	StatusMessage  string `json:"status_message" schema:"status_message"`
