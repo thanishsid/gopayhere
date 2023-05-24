@@ -1,6 +1,7 @@
 package gopayhere
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
 	"sync"
@@ -61,6 +62,8 @@ func (c *Client) getAccessToken() string {
 		c.tokenRefreshing = false
 		c.accessTokenExpiry = time.Now().Add(time.Second * time.Duration(res.ExpiresIn))
 	}()
+
+	fmt.Printf("Payhere Access Token: %s\n", c.accessToken)
 
 	return c.accessToken
 }
