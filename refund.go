@@ -13,7 +13,12 @@ import (
 func (c *Client) RequestRefund(data RefundRequestBody) (RefundResponse, error) {
 	var info RefundResponse
 
-	req, err := createRefundRequest(c.BaseUrl, c.getAccessToken(), data)
+	accessToken, err := c.getAccessToken()
+	if err != nil {
+		return info, err
+	}
+
+	req, err := createRefundRequest(c.BaseUrl, accessToken, data)
 	if err != nil {
 		return info, err
 	}

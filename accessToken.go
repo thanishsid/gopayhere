@@ -14,12 +14,12 @@ func getAccessToken(client *http.Client, payhereUrl *url.URL, appID, appSecret s
 
 	req, err := createAccessTokenRequest(payhereUrl, appID, appSecret)
 	if err != nil {
-		return info, err
+		return info, fmt.Errorf("failed to create access token request: %w", err)
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
-		return info, err
+		return info, fmt.Errorf("failed to execute access token request: %w", err)
 	}
 
 	defer res.Body.Close()

@@ -1,11 +1,9 @@
 package gopayhere
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"net/url"
-	"sync"
-	"time"
 )
 
 func NewClient(payhereUrl, appID, appSecret string) (*Client, error) {
@@ -29,41 +27,15 @@ type Client struct {
 	AppID     string
 	AppSecret string
 
-	accessToken       string
-	accessTokenExpiry time.Time
-	tokenRefreshing   bool
-
 	client *http.Client
-
-	mu sync.Mutex
 }
 
-func (c *Client) getAccessToken() string {
-	go func() {
-		if c.tokenRefreshing {
-			return
-		}
+func (c *Client) getAccessToken() (string, error) {
+	res, err := getAccessToken(c.client, c.BaseUrl, c.AppID, c.AppSecret)
+	if err != nil {
+		log.Printf("failed to get access token: %s", err.Error())
+		return "", err
+	}
 
-		if c.accessTokenExpiry.After(time.Now().Add(time.Second * 30)) {
-			return
-		}
-
-		c.mu.Lock()
-		defer c.mu.Unlock()
-
-		c.tokenRefreshing = true
-
-		res, err := getAccessToken(c.client, c.BaseUrl, c.AppID, c.AppSecret)
-		if err != nil {
-			return
-		}
-
-		c.accessToken = res.AccessToken
-		c.tokenRefreshing = false
-		c.accessTokenExpiry = time.Now().Add(time.Second * time.Duration(res.ExpiresIn))
-	}()
-
-	fmt.Printf("Payhere Access Token: %s\n", c.accessToken)
-
-	return c.accessToken
+	return res.AccessToken, nil
 }

@@ -12,7 +12,12 @@ import (
 func (c *Client) RequestCharging(data ChargeRequestBody) (ChargeResponse, error) {
 	var info ChargeResponse
 
-	req, err := createChargeRequest(c.BaseUrl, c.getAccessToken(), data)
+	accessToken, err := c.getAccessToken()
+	if err != nil {
+		return info, err
+	}
+
+	req, err := createChargeRequest(c.BaseUrl, accessToken, data)
 	if err != nil {
 		return info, err
 	}
